@@ -26,4 +26,5 @@ let g:citatie_bib_files = [
 
 - `Citatie`
   - Gives you a window with all citations in format `{key} - {title}`. Use `i`
-    to cite inline, i.e. `@citation_key`. Or use `f` or enter to citate full `[@citation_key]`
+    to cite inline, i.e. `@citation_key`. Or use `f` or enter to citate full
+    `[@citation_key]`. You can use `q` to close the window.

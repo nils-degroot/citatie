@@ -109,7 +109,8 @@ local function mappings()
 	local map = {
 		["<CR>"] = "select_entry('full')",
 		["f"] = "select_entry('full')",
-		["i"] = "select_entry('inline')"
+		["i"] = "select_entry('inline')",
+		["q"] = "close_window()",
 	}
 
 	-- Map the keybinds
@@ -119,7 +120,7 @@ local function mappings()
 	end
 
 	-- Map the other keys to nothing
-	local other_chars = {"a", "b", "c", "d", "e", "g", "h", "l", "q", "k", "n",
+	local other_chars = {"a", "b", "c", "d", "e", "g", "h", "l", "k", "n",
 		"o", "p", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 
 	for k, v in ipairs(other_chars) do
@@ -158,5 +159,6 @@ end
 
 return {
 	open_window = open_window,
-	select_entry = select_entry
+	select_entry = select_entry,
+	close_window = close_window
 }
