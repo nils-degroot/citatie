@@ -115,12 +115,12 @@ local function mappings()
 
 	-- Map the keybinds
 	for k, v in pairs(map) do
-		api.nvim_buf_set_keymap(buf, "n", k, 
-			':lua require"citatie".'..v..'<CR>', map_config)
+		api.nvim_buf_set_keymap(buf, "n", k,
+			':lua require"citatie".' ..v.. '<CR>', map_config)
 	end
 
 	-- Map the other keys to nothing
-	local other_chars = {"a", "b", "c", "d", "e", "g", "h", "l", "k", "n",
+	local other_chars = {"a", "b", "c", "d", "e", "h", "l", "k", "n",
 		"o", "p", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 
 	for k, v in ipairs(other_chars) do
@@ -149,7 +149,7 @@ local function open_window()
 		height = win_height,
 		row = window_size.height,
 		col = window_size.width,
-		border = "single"
+		border = "solid"
 	})
 
 	local bib_content = parse_bib_file()
