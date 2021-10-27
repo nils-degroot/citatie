@@ -13,7 +13,7 @@ Installation can be done via your favorite plugin manager. For vim-plug:
 
 - `citatie_bib_files`: A list of bib files to read
 
-### Example configuratio
+### Example configuration
 
 ```vim
 let g:citatie_bib_files = [
