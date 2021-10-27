@@ -31,6 +31,26 @@ local function get_bib_content()
 	return contents
 end
 
+-- Returns a table of tags from a bib entry if found, nil otherwise
+-- A entry should start with { and end with }
+local function get_tags_from_entry(entry)
+	local entry_stripped = entry:sub(2, #entry - 1)
+	local result = {}
+
+	-- Create two capture groups. one for the key, other one for the value
+	for k, v in string.gmatch(entry_stripped, ' (.-)=["{]+(.-)["}]+,?') do
+		if trim_string(k) == "" then
+			goto continue
+		end
+
+		result[string.lower(trim_string(k))] = trim_string(v)
+
+		::continue::
+	end
+
+	return result
+end
+
 -- Parses a bib file to an list of strings
 local function parse_bib_file()
 	local bib = get_bib_content()
@@ -41,29 +61,40 @@ local function parse_bib_file()
 		-- Trim the line
 		line = trim_string(line)
 
-		-- Line is a title
-		local line_lower = string.lower(line)
-		if (line_lower:match("^(.*) *=")) == "title" then
-			local title = ""
-
-			if line:match("({.*})") ~= nil then
-				title = line:match("{(.*)}")
-			elseif line:match("(\".*\")") then
-				title = line:match("\"(.*)\"")
-			end
-
-			parsed[i] = parsed[i] .. " - " .. title
-
-			goto continue
-		end
-
-		-- Is not a new section
 		if line:sub(1, 1) ~= "@" then
+			-- Is not a new section
 			goto continue
 		end
 
 		i = i + 1
-		parsed[i] = line:match("@.*{(.+),")
+		parsed[i] = line:match("@.-{(.-),")
+
+		local citation_start, ending = bib:find(parsed[i], 1, true)
+		local depth = 1
+		local citation_end
+
+		for current = 1, #bib do
+			local c = bib:sub(ending + current, ending + current)
+
+			if c == "{" then
+				depth = depth + 1
+			elseif c == "}" then
+				depth = depth - 1
+
+				if depth == 0 then
+					citation_end = ending + current
+					goto scan_citation_end
+				end
+			end
+		end
+
+		::scan_citation_end::
+
+		local tags = get_tags_from_entry("{" .. bib:sub(citation_start, citation_end))
+
+		if tags["title"] ~= nil then
+			parsed[i] = parsed[i] .. " - " .. tags["title"]
+		end
 
 		::continue::
 	end
